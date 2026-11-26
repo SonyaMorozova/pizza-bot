@@ -10,12 +10,11 @@ from bot import telegram_bot_api
 
 
 class TestTelegramBotAPI(unittest.TestCase):
-
     @patch("bot.telegram_bot_api.urllib.request.urlopen")
     def test_api_request(self, urlopen):
-        urlopen.return_value.__enter__.return_value.read.return_value = (
-            json.dumps({"ok": True, "result": {}}).encode()
-        )
+        urlopen.return_value.__enter__.return_value.read.return_value = json.dumps(
+            {"ok": True, "result": {}}
+        ).encode()
 
         with patch.object(telegram_bot_api, "TOKEN", "test-token"):
             with patch.object(

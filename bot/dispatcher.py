@@ -1,6 +1,5 @@
+from bot.handler import Handler, HandlerStatus
 from bot.storage import Storage, user_id_from_update
-from bot.handler import Handler
-from bot.handler import HandlerStatus
 
 
 class Dispatcher:

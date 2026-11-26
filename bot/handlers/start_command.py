@@ -1,12 +1,9 @@
-from bot import pizza_menu
-from bot import telegram_bot_api
+from bot import pizza_menu, telegram_bot_api
+from bot.handler import Handler, HandlerStatus
 from bot.storage import Storage, default_state
-from bot.handler import Handler
-from bot.handler import HandlerStatus
 
 
 class StartCommand(Handler):
-
     def __init__(self, storage: Storage) -> None:
         self._storage = storage
 

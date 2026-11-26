@@ -10,7 +10,6 @@ from bot.long_polling import start_long_polling
 
 
 class TestLongPolling(unittest.TestCase):
-
     def setUp(self):
         self.dispatcher = Mock(spec=Dispatcher)
 
@@ -45,9 +44,7 @@ class TestLongPolling(unittest.TestCase):
         with self.assertRaises(KeyboardInterrupt):
             start_long_polling(self.dispatcher)
 
-        self.dispatcher.dispatch.assert_called_once_with(
-            update
-        )
+        self.dispatcher.dispatch.assert_called_once_with(update)
 
     @patch("bot.long_polling.telegram_bot_api.get_updates")
     def test_offset_update(self, get_updates):
@@ -67,9 +64,7 @@ class TestLongPolling(unittest.TestCase):
         self.assertEqual(calls[0].kwargs["offset"], 0)
         self.assertEqual(calls[1].kwargs["offset"], 12)
 
-        self.assertEqual(
-            self.dispatcher.dispatch.call_count, 2
-        )
+        self.assertEqual(self.dispatcher.dispatch.call_count, 2)
 
 
 if __name__ == "__main__":

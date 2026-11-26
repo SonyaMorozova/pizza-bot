@@ -6,6 +6,7 @@ import urllib.request
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 BASE_URL = os.environ.get("TELEGRAM_BASE_URL", "https://api.telegram.org")
 
+
 def api_request(method, **params):
     url = f"{BASE_URL}/bot{TOKEN}/{method}"
     data = urllib.parse.urlencode(params).encode()
@@ -37,6 +38,7 @@ def answer_callback_query(**params):
 
 def edit_message_reply_markup(**params):
     return api_request("editMessageReplyMarkup", **params)
+
 
 def delete_message(**params):
     return api_request("deleteMessage", **params)

@@ -6,58 +6,54 @@ from bot import pizza_menu
 
 
 class TestPizzaMenu(unittest.TestCase):
-
     def test_recipes_keyboard(self):
         keyboard = json.loads(pizza_menu.recipes_keyboard())
         buttons = keyboard["inline_keyboard"]
 
-        callback_data = [
-            button["callback_data"]
-            for row in buttons
-            for button in row
-        ]
+        callback_data = [button["callback_data"] for row in buttons for button in row]
 
-        self.assertCountEqual(callback_data, [
-            "margherita",
-            "pepperoni",
-            "four_cheese",
-            "hawaiian",
-            "napoletano",
-        ])
+        self.assertCountEqual(
+            callback_data,
+            [
+                "margherita",
+                "pepperoni",
+                "four_cheese",
+                "hawaiian",
+                "napoletano",
+            ],
+        )
 
     def test_sizes_keyboard(self):
         keyboard = json.loads(pizza_menu.sizes_keyboard())
         buttons = keyboard["inline_keyboard"]
 
-        callback_data = [
-            button["callback_data"]
-            for row in buttons
-            for button in row
-        ]
+        callback_data = [button["callback_data"] for row in buttons for button in row]
 
-        self.assertCountEqual(callback_data, [
-            "small",
-            "medium",
-            "large",
-        ])
+        self.assertCountEqual(
+            callback_data,
+            [
+                "small",
+                "medium",
+                "large",
+            ],
+        )
 
     def test_drinks_keyboard(self):
         keyboard = json.loads(pizza_menu.drinks_keyboard())
         buttons = keyboard["inline_keyboard"]
 
-        callback_data = [
-            button["callback_data"]
-            for row in buttons
-            for button in row
-        ]
+        callback_data = [button["callback_data"] for row in buttons for button in row]
 
-        self.assertCountEqual(callback_data, [
-            "juice",
-            "morse",
-            "tea",
-            "cola",
-            "none",
-        ])
+        self.assertCountEqual(
+            callback_data,
+            [
+                "juice",
+                "morse",
+                "tea",
+                "cola",
+                "none",
+            ],
+        )
 
     def test_order_summary(self):
         order = {
@@ -73,11 +69,13 @@ class TestPizzaMenu(unittest.TestCase):
         self.assertIn("Без напитка", summary)
 
     def test_all_order_combinations(self):
-        combinations = list(product(
-            pizza_menu.RECIPES,
-            pizza_menu.SIZES,
-            pizza_menu.DRINKS,
-        ))
+        combinations = list(
+            product(
+                pizza_menu.RECIPES,
+                pizza_menu.SIZES,
+                pizza_menu.DRINKS,
+            )
+        )
 
         self.assertEqual(len(combinations), 75)
 

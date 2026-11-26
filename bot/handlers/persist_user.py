@@ -1,10 +1,8 @@
+from bot.handler import Handler, HandlerStatus
 from bot.storage import Storage, user_from_update
-from bot.handler import Handler
-from bot.handler import HandlerStatus
 
 
 class PersistUser(Handler):
-
     def __init__(self, storage: Storage) -> None:
         self._storage = storage
 

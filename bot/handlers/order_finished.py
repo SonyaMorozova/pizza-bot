@@ -1,7 +1,5 @@
-from bot import pizza_menu
-from bot import telegram_bot_api
-from bot.handler import Handler
-from bot.handler import HandlerStatus
+from bot import pizza_menu, telegram_bot_api
+from bot.handler import Handler, HandlerStatus
 
 
 class OrderFinished(Handler):

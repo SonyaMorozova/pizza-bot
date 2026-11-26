@@ -12,7 +12,7 @@ def start_long_polling(dispatcher: Dispatcher) -> None:
             timeout=30,
             # Иначе остаётся прошлый allowed_updates (например только message) —
             # callback_query не приходит, inline-кнопки «не работают».
-            limit = 100,
+            limit=100,
             allowed_updates=json.dumps(["message", "callback_query"]),
         )
         for update in updates:

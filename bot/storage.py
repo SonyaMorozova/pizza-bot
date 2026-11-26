@@ -27,7 +27,6 @@ def user_id_from_update(update: dict):
 
 
 class Storage(ABC):
-
     @abstractmethod
     def persist_user(self, user: dict) -> None:
         pass

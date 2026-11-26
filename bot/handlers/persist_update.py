@@ -1,6 +1,5 @@
 from bot import updated_logger
-from bot.handler import Handler
-from bot.handler import HandlerStatus
+from bot.handler import Handler, HandlerStatus
 
 
 class PersistUpdate(Handler):

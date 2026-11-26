@@ -22,11 +22,7 @@ DRINKS = [
     ("none", "Без напитка"),
 ]
 
-_LABELS = {
-    key: label
-    for options in (RECIPES, SIZES, DRINKS)
-    for key, label in options
-}
+_LABELS = {key: label for options in (RECIPES, SIZES, DRINKS) for key, label in options}
 
 MSG_CHOOSE_RECIPE = "Собери пиццу. Выбери рецепт:"
 MSG_CHOOSE_SIZE = "Выбери размер:"
@@ -42,8 +38,7 @@ def _keyboard(options: list[tuple[str, str]]) -> str:
     return json.dumps(
         {
             "inline_keyboard": [
-                [{"text": label, "callback_data": key}]
-                for key, label in options
+                [{"text": label, "callback_data": key}] for key, label in options
             ]
         },
         ensure_ascii=False,

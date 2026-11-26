@@ -1,9 +1,22 @@
-# .PHONY — цель «run» не связана с файлом на диске; make всегда выполнит рецепт,
-# даже если в каталоге случайно появится файл с именем run.
-.PHONY: run
+.PHONY: run test lint format typecheck check
 
-# Запуск бота: загрузить переменные из .env в окружение и стартовать пакет bot.
 run:
-	set -o allexport && \
-	. ./.env && \
-	exec python3 -m bot
+	python -m bot
+
+test:
+	python -m unittest discover -s tests -v
+
+lint:
+	ruff check .
+
+format:
+	ruff format .
+
+typecheck:
+	mypy bot
+
+check:
+	ruff format --check .
+	ruff check .
+	mypy bot
+	python -m unittest discover -s tests -v

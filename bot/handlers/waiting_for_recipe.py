@@ -1,15 +1,11 @@
-from bot import pizza_menu
-from bot import telegram_bot_api
+from bot import pizza_menu, telegram_bot_api
+from bot.handler import Handler, HandlerStatus
 from bot.storage import Storage
-from bot.handler import Handler
-from bot.handler import HandlerStatus
-
 
 _VALID = {key for key, _ in pizza_menu.RECIPES}
 
 
 class WaitingForRecipe(Handler):
-
     def __init__(self, storage: Storage) -> None:
         self._storage = storage
 
@@ -22,10 +18,7 @@ class WaitingForRecipe(Handler):
 
         cq = update["callback_query"]
 
-        return (
-            cq.get("data") in _VALID
-            and cq.get("message") is not None
-        )
+        return cq.get("data") in _VALID and cq.get("message") is not None
 
     def handle(self, update: dict, state: dict) -> HandlerStatus:
         cq = update["callback_query"]

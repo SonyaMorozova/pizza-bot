@@ -4,15 +4,14 @@ from unittest.mock import Mock, patch
 
 os.environ.setdefault("TELEGRAM_TOKEN", "test-token")
 
-from bot.storage import Storage, default_state
 from bot.handlers.start_command import StartCommand
-from bot.handlers.waiting_for_recipe import WaitingForRecipe
-from bot.handlers.waiting_for_pizza_size import WaitingForPizzaSize
 from bot.handlers.waiting_for_drink import WaitingForDrink
+from bot.handlers.waiting_for_pizza_size import WaitingForPizzaSize
+from bot.handlers.waiting_for_recipe import WaitingForRecipe
+from bot.storage import Storage, default_state
 
 
 class TestHandlers(unittest.TestCase):
-
     def setUp(self):
         self.storage = Mock(spec=Storage)
         self.state = default_state()
@@ -42,15 +41,11 @@ class TestHandlers(unittest.TestCase):
             }
         }
 
-        self.assertTrue(
-            handler.can_handle(update, self.state)
-        )
+        self.assertTrue(handler.can_handle(update, self.state))
 
         handler.handle(update, self.state)
 
-        self.storage.save_user_state.assert_called_once_with(
-            123, default_state()
-        )
+        self.storage.save_user_state.assert_called_once_with(123, default_state())
 
         api.send_message.assert_called_once()
         self.assertEqual(len(api.mock_calls), 1)
@@ -73,18 +68,14 @@ class TestHandlers(unittest.TestCase):
 
         handler.handle(update, self.state)
 
-        self.storage.save_user_state.assert_called_once_with(
-            123, default_state()
-        )
+        self.storage.save_user_state.assert_called_once_with(123, default_state())
 
     @patch("bot.handlers.waiting_for_recipe.telegram_bot_api")
     def test_choose_recipe(self, api):
         handler = WaitingForRecipe(self.storage)
         update = self.make_callback("pepperoni")
 
-        self.assertTrue(
-            handler.can_handle(update, self.state)
-        )
+        self.assertTrue(handler.can_handle(update, self.state))
 
         handler.handle(update, self.state)
 
@@ -98,9 +89,7 @@ class TestHandlers(unittest.TestCase):
             "waiting_for_pizza_size",
         )
 
-        self.storage.save_user_state.assert_called_once_with(
-            123, self.state
-        )
+        self.storage.save_user_state.assert_called_once_with(123, self.state)
 
         self.assert_callback_calls(api)
 
@@ -113,9 +102,7 @@ class TestHandlers(unittest.TestCase):
 
         update = self.make_callback("large")
 
-        self.assertTrue(
-            handler.can_handle(update, self.state)
-        )
+        self.assertTrue(handler.can_handle(update, self.state))
 
         handler.handle(update, self.state)
 
@@ -129,9 +116,7 @@ class TestHandlers(unittest.TestCase):
             "waiting_for_drink",
         )
 
-        self.storage.save_user_state.assert_called_once_with(
-            123, self.state
-        )
+        self.storage.save_user_state.assert_called_once_with(123, self.state)
 
         self.assert_callback_calls(api)
 
@@ -145,9 +130,7 @@ class TestHandlers(unittest.TestCase):
 
         update = self.make_callback("none")
 
-        self.assertTrue(
-            handler.can_handle(update, self.state)
-        )
+        self.assertTrue(handler.can_handle(update, self.state))
 
         handler.handle(update, self.state)
 
@@ -161,9 +144,7 @@ class TestHandlers(unittest.TestCase):
             "order_finished",
         )
 
-        self.storage.save_user_state.assert_called_once_with(
-            123, self.state
-        )
+        self.storage.save_user_state.assert_called_once_with(123, self.state)
 
         self.assert_callback_calls(api)
 
@@ -177,9 +158,7 @@ class TestHandlers(unittest.TestCase):
         handler = WaitingForRecipe(self.storage)
         update = self.make_callback("unknown")
 
-        self.assertFalse(
-            handler.can_handle(update, self.state)
-        )
+        self.assertFalse(handler.can_handle(update, self.state))
 
     def test_unknown_message(self):
         handler = StartCommand(self.storage)
@@ -192,9 +171,7 @@ class TestHandlers(unittest.TestCase):
             }
         }
 
-        self.assertFalse(
-            handler.can_handle(update, self.state)
-        )
+        self.assertFalse(handler.can_handle(update, self.state))
 
     def assert_callback_calls(self, api):
         api.delete_message.assert_called_once_with(

@@ -7,7 +7,6 @@ from bot.storage import Storage, default_state
 
 
 class TestDispatcher(unittest.TestCase):
-
     def setUp(self):
         self.storage = Mock(spec=Storage)
         self.state = default_state()
@@ -37,13 +36,9 @@ class TestDispatcher(unittest.TestCase):
         self.dispatcher.add_handlers(handler)
         self.dispatcher.dispatch(self.update)
 
-        handler.can_handle.assert_called_once_with(
-            self.update, self.state
-        )
+        handler.can_handle.assert_called_once_with(self.update, self.state)
 
-        handler.handle.assert_called_once_with(
-            self.update, self.state
-        )
+        handler.handle.assert_called_once_with(self.update, self.state)
 
     def test_skip_handler(self):
         handler = Mock(spec=Handler)
