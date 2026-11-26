@@ -22,11 +22,11 @@ class WaitingForPizzaSize(Handler):
         telegram_bot_api.answer_callback_query(callback_query_id=cq["id"])
         size = pizza_menu.parse_callback_data(cq["data"], "size")
         state["order_content"]["size"] = size
-        state["current_state"] = "waiting_for_crust"
+        state["current_state"] = "waiting_for_drink"
         users_storage.save_user_state(cq["from"]["id"], state)
         telegram_bot_api.send_message(
             chat_id=cq["message"]["chat"]["id"],
-            text=pizza_menu.MSG_CHOOSE_CRUST,
-            reply_markup=pizza_menu.crusts_keyboard(),
+            text=pizza_menu.MSG_CHOOSE_DRINK,
+            reply_markup=pizza_menu.drinks_keyboard(),
         )
         return HandlerStatus.STOP

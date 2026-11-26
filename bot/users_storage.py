@@ -42,7 +42,6 @@ def default_state():
         "order_content": {
             "recipe": None,
             "size": None,
-            "crust": None,
             "drink": None,
         },
     }
