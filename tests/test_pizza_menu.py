@@ -48,7 +48,7 @@ class TestPizzaMenu(unittest.TestCase):
             callback_data,
             [
                 "juice",
-                "morse",
+                "mors",
                 "tea",
                 "cola",
                 "none",
