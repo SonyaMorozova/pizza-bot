@@ -1,32 +1,57 @@
 from bot import pizza_menu
 from bot import telegram_bot_api
-from bot import users_storage
+from bot.storage import Storage
 from bot.handler import Handler
 from bot.handler import HandlerStatus
+
 
 _VALID = {key for key, _ in pizza_menu.SIZES}
 
 
 class WaitingForPizzaSize(Handler):
+
+    def __init__(self, storage: Storage) -> None:
+        self._storage = storage
+
     def can_handle(self, update: dict, state: dict) -> bool:
         if state.get("current_state") != "waiting_for_pizza_size":
             return False
+
         if "callback_query" not in update:
             return False
-        data = update["callback_query"].get("data", "")
-        value = pizza_menu.parse_callback_data(data, "size")
-        return value is not None and value in _VALID
+
+        cq = update["callback_query"]
+
+        return (
+            cq.get("data") in _VALID
+            and cq.get("message") is not None
+        )
 
     def handle(self, update: dict, state: dict) -> HandlerStatus:
         cq = update["callback_query"]
-        telegram_bot_api.answer_callback_query(callback_query_id=cq["id"])
-        size = pizza_menu.parse_callback_data(cq["data"], "size")
+        chat_id = cq["message"]["chat"]["id"]
+        message_id = cq["message"]["message_id"]
+
+        size = cq["data"]
+
         state["order_content"]["size"] = size
         state["current_state"] = "waiting_for_drink"
-        users_storage.save_user_state(cq["from"]["id"], state)
+
+        self._storage.save_user_state(cq["from"]["id"], state)
+
+        telegram_bot_api.delete_message(
+            chat_id=chat_id,
+            message_id=message_id,
+        )
+
         telegram_bot_api.send_message(
-            chat_id=cq["message"]["chat"]["id"],
+            chat_id=chat_id,
             text=pizza_menu.MSG_CHOOSE_DRINK,
             reply_markup=pizza_menu.drinks_keyboard(),
         )
+
+        telegram_bot_api.answer_callback_query(
+            callback_query_id=cq["id"],
+        )
+
         return HandlerStatus.STOP

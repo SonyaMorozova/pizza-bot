@@ -1,3 +1,4 @@
+from bot.storage import Storage
 from bot.handler import Handler
 from bot.handlers.order_finished import OrderFinished
 from bot.handlers.persist_update import PersistUpdate
@@ -8,13 +9,13 @@ from bot.handlers.waiting_for_pizza_size import WaitingForPizzaSize
 from bot.handlers.waiting_for_recipe import WaitingForRecipe
 
 
-def get_handlers() -> list[Handler]:
+def get_handlers(storage: Storage) -> list[Handler]:
     return [
         PersistUpdate(),
-        PersistUser(),
-        StartCommand(),
-        WaitingForRecipe(),
-        WaitingForPizzaSize(),
-        WaitingForDrink(),
+        PersistUser(storage),
+        StartCommand(storage),
+        WaitingForRecipe(storage),
+        WaitingForPizzaSize(storage),
+        WaitingForDrink(storage),
         OrderFinished(),
     ]

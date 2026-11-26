@@ -1,31 +1,58 @@
 from bot import pizza_menu
 from bot import telegram_bot_api
-from bot import users_storage
+from bot.storage import Storage
 from bot.handler import Handler
 from bot.handler import HandlerStatus
+
 
 _VALID = {key for key, _ in pizza_menu.DRINKS}
 
 
 class WaitingForDrink(Handler):
+
+    def __init__(self, storage: Storage) -> None:
+        self._storage = storage
+
     def can_handle(self, update: dict, state: dict) -> bool:
         if state.get("current_state") != "waiting_for_drink":
             return False
+
         if "callback_query" not in update:
             return False
-        data = update["callback_query"].get("data", "")
-        value = pizza_menu.parse_callback_data(data, "drink")
-        return value is not None and value in _VALID
+
+        cq = update["callback_query"]
+
+        return (
+            cq.get("data") in _VALID
+            and cq.get("message") is not None
+        )
 
     def handle(self, update: dict, state: dict) -> HandlerStatus:
         cq = update["callback_query"]
-        telegram_bot_api.answer_callback_query(callback_query_id=cq["id"])
-        drink = pizza_menu.parse_callback_data(cq["data"], "drink")
+        chat_id = cq["message"]["chat"]["id"]
+        message_id = cq["message"]["message_id"]
+
+        drink = cq["data"]
+
         state["order_content"]["drink"] = drink
         state["current_state"] = "order_finished"
-        users_storage.save_user_state(cq["from"]["id"], state)
-        telegram_bot_api.send_message(
-            chat_id=cq["message"]["chat"]["id"],
-            text=pizza_menu.format_order_summary(state["order_content"]),
+
+        self._storage.save_user_state(cq["from"]["id"], state)
+
+        telegram_bot_api.delete_message(
+            chat_id=chat_id,
+            message_id=message_id,
         )
+
+        telegram_bot_api.send_message(
+            chat_id=chat_id,
+            text=pizza_menu.format_order_summary(
+                state["order_content"]
+            ),
+        )
+
+        telegram_bot_api.answer_callback_query(
+            callback_query_id=cq["id"],
+        )
+
         return HandlerStatus.STOP

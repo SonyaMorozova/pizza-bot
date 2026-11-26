@@ -2,7 +2,7 @@ import sqlite3
 from contextlib import closing
 from pathlib import Path
 
-from bot.storage import Storage
+from bot.storage import Storage, default_state
 
 
 class SQLiteStorage(Storage):
@@ -57,14 +57,7 @@ class SQLiteStorage(Storage):
             """, (user_id,)).fetchone()
 
         if row is None:
-            return {
-                "current_state": "waiting_for_recipe",
-                "order_content": {
-                    "recipe": None,
-                    "size": None,
-                    "drink": None,
-                },
-            }
+            return default_state()
 
         return {
             "current_state": row[0],

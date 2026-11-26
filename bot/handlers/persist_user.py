@@ -1,12 +1,20 @@
-from bot import users_storage
+from bot.storage import Storage, user_from_update
 from bot.handler import Handler
 from bot.handler import HandlerStatus
 
 
 class PersistUser(Handler):
+
+    def __init__(self, storage: Storage) -> None:
+        self._storage = storage
+
     def can_handle(self, update: dict, state: dict) -> bool:
         return True
 
     def handle(self, update: dict, state: dict) -> HandlerStatus:
-        users_storage.persist_user(update)
+        user = user_from_update(update)
+
+        if user is not None:
+            self._storage.persist_user(user)
+
         return HandlerStatus.CONTINUE
